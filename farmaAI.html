@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmaLife - Seu Assistente Farmacêutico Inteligente</title>
+    <link rel="icon" type="image.ico" sizes="16x16" href="icone.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+            color: var(--dark);
+        }
+
+        .pill-shape {
+            border-radius: 9999px;
+        }
+
+        .medicine-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .ai-chat-bubble {
+            border-radius: 18px 18px 18px 4px;
+        }
+
+        .user-chat-bubble {
+            border-radius: 18px 18px 4px 18px;
+        }
+
+        .prescription-scan {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .bottom-nav-btn {
+            position: relative;
+        }
+
+        .bottom-nav-btn.active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: #3b82f6;
+        }
+    </style>
+</head>
+
+<body class="pb-16 md:pb-0">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm py-4 px-6 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center">
+            <img src="logo.png" alt="Logo FarmaAI - cápsula azul com detalhes em formato de circuito"
+                class="mr-2 w-8 h-8">
+
+            <span class="text-xl font-semibold text-blue-600">Farma<span class="text-green-500">Life</span></span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
+                <i class="fas fa-bell"></i>
+                <span class="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+            <div
+                class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
+                JP</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+        <!-- Dashboard Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Olá, João Pedro!</h1>
+                <p class="text-gray-600">Hoje é dia 15/06/2023 - Quinta-feira</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex space-x-3">
+            </div>
+        </div>
+
+        <!-- Health Status -->
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white mb-8 shadow-lg">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-xl font-semibold mb-2">Seu Status de Saúde</h2>
+                    <p class="mb-4">Você está com 82% de adesão ao tratamento esta semana!</p>
+                    <button class="px-4 py-2 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100">
+                        Ver Detalhes
+                    </button>
+                </div>
+                <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                    <div class="text-center">
+                        <span class="block text-3xl font-bold">82%</span>
+                        <span class="text-xs">adesão</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <a href="medicines.html"
+                class="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer text-center">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-pills text-blue-600"></i>
+                </div>
+                <p class="font-medium">Medicações</p>
+            </a>
+            <a href="pharmacy.html"
+                class="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer text-center">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-shopping-cart text-green-600"></i>
+                </div>
+                <p class="font-medium">Farmácia</p>
+            </a>
+            <button
+                class="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer text-center">
+                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-file-prescription text-purple-600"></i>
+                </div>
+                <p class="font-medium">Receitas</p>
+            </button>
+            <a href="profile.html"
+                class="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer text-center">
+                <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-user text-yellow-600"></i>
+                </div>
+                <p class="font-medium">Perfil</p>
+            </a>
+        </div>
+
+        <!-- Medication Reminders -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Lembretes de Medicamentos</h2>
+                <a href="medicines.html" class="text-blue-600 hover:text-blue-800 font-medium">Ver todos</a>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="p-4 border-b border-gray-100 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Dipirona Monoidratada 500mg</h3>
+                        <p class="text-sm text-gray-500">Tomar 1 comprimido - 2x ao dia</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Próxima
+                            dose: 14:00</span>
+                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-full">
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-4 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-medium">Omeprazol 20mg</h3>
+                        <p class="text-sm text-gray-500">Tomar 1 cápsula - 1x ao dia</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Em
+                            estoque: 3 dias</span>
+                        <a href="pharmacy.html" class="p-2 text-blue-600 hover:bg-blue-50 rounded-full">
+                            <i class="fas fa-shopping-cart"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prescription Scan -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Digitalizar Receita</h2>
+            <div class="prescription-scan rounded-2xl p-6 text-center">
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+                    <i class="fas fa-camera text-blue-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">Digitalize sua receita</h3>
+                <p class="text-gray-600 mb-4 text-sm max-w-md mx-auto">Use nossa tecnologia IA para reconhecer
+                    automaticamente seus medicamentos e dosagens</p>
+                <button
+                    class="px-6 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 flex items-center mx-auto pulse">
+                    <i class="fas fa-camera mr-2"></i> Escanear Receita
+                </button>
+            </div>
+        </div>
+
+        <!-- Premium Banner -->
+        <div
+            class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-6 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="absolute top-0 right-0 opacity-20">
+                <i class="fas fa-crown text-6xl"></i>
+            </div>
+            <div class="relative">
+                <h2 class="text-xl font-semibold mb-2">FarmaLife Premium</h2>
+                <p class="mb-4 max-w-md">Desbloqueie consultas ilimitadas com especialistas, descontos exclusivos em
+                    farmácias e assistente de saúde 24/7.</p>
+                <button class="px-6 py-2 bg-white text-purple-600 rounded-full font-medium hover:bg-gray-100">
+                    Assinar por R$ 19,90/mês
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg flex justify-around items-center py-3 px-2 z-50">
+        <a href="farmaAI.html" class="bottom-nav-btn active flex flex-col items-center text-blue-600 py-1">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-xs mt-1">Início</span>
+        </a>
+        <a href="medicines.html"
+            class="bottom-nav-btn flex flex-col items-center text-gray-500 hover:text-blue-600 py-1">
+            <i class="fas fa-pills text-lg"></i>
+            <span class="text-xs mt-1">Medicações</span>
+        </a>
+        <a href="pharmacy.html"
+            class="bottom-nav-btn flex flex-col items-center text-gray-500 hover:text-blue-600 py-1">
+            <i class="fas fa-shopping-cart text-lg"></i>
+            <span class="text-xs mt-1">Farmácia</span>
+        </a>
+        <a href="profile.html" class="bottom-nav-btn flex flex-col items-center text-gray-500 hover:text-blue-600 py-1">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-xs mt-1">Perfil</span>
+        </a>
+    </div>
+
+    <script>
+        // Interactive elements
+        document.addEventListener('DOMContentLoaded', function () {
+            // Medication reminders completion
+            const reminderButtons = document.querySelectorAll('.reminder-pill button');
+            reminderButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    if (this.innerHTML.includes('fa-check')) {
+                        const pill = this.closest('.reminder-pill');
+                        pill.style.opacity = '0.5';
+                        this.innerHTML = '<i class="fas fa-redo"></i>';
+                    } else {
+                        const pill = this.closest('.reminder-pill');
+                        pill.style.opacity = '1';
+                        this.innerHTML = '<i class="fas fa-check"></i>';
+                    }
+                });
+            });
+
+            // Prescription scan button
+            const scanBtn = document.querySelector('.prescription-scan button');
+            scanBtn.addEventListener('click', function () {
+                alert('Redirecionando para câmera para escanear receita...');
+            });
+
+            // Premium button
+            const premiumBtn = document.querySelector('.bg-gradient-to-r.from-purple-600 button');
+            premiumBtn.addEventListener('click', function () {
+                alert('Redirecionando para assinatura premium...');
+            });
+
+            // Bottom navigation active state
+            const navLinks = document.querySelectorAll('.bottom-nav-btn');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    navLinks.forEach(l => l.classList.remove('active', 'text-blue-600'));
+                    navLinks.forEach(l => l.classList.add('text-gray-500'));
+                    this.classList.add('active', 'text-blue-600');
+                    this.classList.remove('text-gray-500');
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
