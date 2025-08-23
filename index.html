@@ -37,6 +37,51 @@
       from {opacity: 0; transform: translateY(10px);}
       to {opacity: 1; transform: translateY(0);}
     }
+
+    /* Popup estilizado */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: #fff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 50;
+      max-width: 300px;
+    }
+    .popup.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .popup h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .popup button {
+      margin-top: 1rem;
+    }
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 40;
+    }
+    .overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
   </style>
 </head>
 <body>
@@ -46,16 +91,16 @@
 
     <!-- Registro -->
     <form id="registerForm" class="space-y-4">
-      <input type="text" placeholder="Nome" required class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300">
-      <input type="email" placeholder="Email" required class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300">
-      <input type="password" placeholder="Senha" required class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300">
+      <input id="regName" type="text" placeholder="Nome" required class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300">
+      <input id="regEmail" type="email" placeholder="Email" required class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300">
+      <input id="regPassword" type="password" placeholder="Senha" required class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300">
       <button type="submit" class="w-full py-3 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 transition">Registrar</button>
     </form>
 
     <!-- Login -->
     <form id="loginForm" class="space-y-4 hidden">
-      <input type="email" placeholder="Email" required class="w-full p-3 border rounded-lg focus:ring focus:ring-green-300">
-      <input type="password" placeholder="Senha" required class="w-full p-3 border rounded-lg focus:ring focus:ring-green-300">
+      <input id="loginEmail" type="email" placeholder="Email" required class="w-full p-3 border rounded-lg focus:ring focus:ring-green-300">
+      <input id="loginPassword" type="password" placeholder="Senha" required class="w-full p-3 border rounded-lg focus:ring focus:ring-green-300">
       <button type="submit" class="w-full py-3 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition">Entrar</button>
       <p id="toRecovery" class="text-sm text-gray-500 mt-2 cursor-pointer hover:underline text-center">Esqueceu a senha?</p>
     </form>
@@ -75,72 +120,175 @@
     </div>
   </div>
 
+  <!-- Popup -->
+  <div id="overlay" class="overlay"></div>
+  <div id="popup" class="popup">
+    <h3 id="popupMessage">Conta criada com sucesso!</h3>
+    <button id="closePopup" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">OK</button>
+  </div>
+
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const registerForm = document.getElementById("registerForm");
-      const loginForm = document.getElementById("loginForm");
-      const recoveryForm = document.getElementById("recoveryForm");
-      const formTitle = document.getElementById("formTitle");
-      const toggleToLogin = document.getElementById("toggleToLogin");
-      const toggleToRegister = document.getElementById("toggleToRegister");
-      const toRecovery = document.getElementById("toRecovery");
-      const backToLogin = document.getElementById("backToLogin");
+document.addEventListener("DOMContentLoaded", () => {
+  const registerForm = document.getElementById("registerForm");
+  const loginForm = document.getElementById("loginForm");
+  const recoveryForm = document.getElementById("recoveryForm");
+  const formTitle = document.getElementById("formTitle");
+  const toggleToLogin = document.getElementById("toggleToLogin");
+  const toggleToRegister = document.getElementById("toggleToRegister");
+  const toRecovery = document.getElementById("toRecovery");
+  const backToLogin = document.getElementById("backToLogin");
 
-      // Registro
-      registerForm.addEventListener("submit", e => {
-        e.preventDefault();
-        alert("Conta criada com sucesso!");
-      });
+  // Popup
+  const popup = document.getElementById("popup");
+  const overlay = document.getElementById("overlay");
+  const closePopup = document.getElementById("closePopup");
+  const popupMessage = document.getElementById("popupMessage");
 
-      // Login
-      loginForm.addEventListener("submit", e => {
-        e.preventDefault();
-        window.location.href = "farmaAI.html";
-      });
+  let redirectToLoginAfterPopup = false;
+  let resetEmail = null; // armazena email para redefinir senha
 
-      // Recuperação
-      recoveryForm.addEventListener("submit", e => {
-        e.preventDefault();
-        alert("Instruções de recuperação enviadas para seu email.");
-        recoveryForm.classList.add("hidden");
-        loginForm.classList.remove("hidden");
-        formTitle.textContent = "Entrar no FarmaLife";
-      });
+  function showPopup(message, redirectLogin = false, resetMode = false) {
+    popupMessage.innerHTML = message;
+    popup.classList.add("show");
+    overlay.classList.add("show");
+    redirectToLoginAfterPopup = redirectLogin;
 
-      // Alternar para login
-      toggleToLogin.addEventListener("click", () => {
-        registerForm.classList.add("hidden");
-        recoveryForm.classList.add("hidden");
-        loginForm.classList.remove("hidden");
-        toggleToLogin.classList.add("hidden");
-        toggleToRegister.classList.remove("hidden");
-        formTitle.textContent = "Entrar no FarmaLife";
-      });
+    if (resetMode) {
+      // Adiciona campo para nova senha no popup
+      popupMessage.innerHTML += `
+        <input id="newPassword" type="password" placeholder="Nova senha" class="w-full mt-3 p-2 border rounded-lg focus:ring focus:ring-purple-300">
+        <button id="confirmReset" class="w-full mt-3 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition">Redefinir Senha</button>
+      `;
 
-      // Alternar para registro
-      toggleToRegister.addEventListener("click", () => {
-        loginForm.classList.add("hidden");
-        recoveryForm.classList.add("hidden");
-        registerForm.classList.remove("hidden");
-        toggleToRegister.classList.add("hidden");
-        toggleToLogin.classList.remove("hidden");
-        formTitle.textContent = "Criar Conta";
-      });
+      setTimeout(() => {
+        document.getElementById("confirmReset").addEventListener("click", () => {
+          const newPassword = document.getElementById("newPassword").value;
+          if (newPassword.trim().length < 3) {
+            alert("A nova senha deve ter pelo menos 3 caracteres!");
+            return;
+          }
 
-      // Ir para recuperação
-      toRecovery.addEventListener("click", () => {
-        loginForm.classList.add("hidden");
-        recoveryForm.classList.remove("hidden");
-        formTitle.textContent = "Recuperar Senha";
-      });
+          let users = JSON.parse(localStorage.getItem("users")) || [];
+          const userIndex = users.findIndex(user => user.email === resetEmail);
 
-      // Voltar do recovery para login
-      backToLogin.addEventListener("click", () => {
-        recoveryForm.classList.add("hidden");
-        loginForm.classList.remove("hidden");
-        formTitle.textContent = "Entrar no FarmaLife";
-      });
-    });
-  </script>
+          if (userIndex !== -1) {
+            users[userIndex].password = newPassword;
+            localStorage.setItem("users", JSON.stringify(users));
+            showPopup("Senha redefinida com sucesso! Faça login novamente.", true);
+          }
+        });
+      }, 100);
+    }
+  }
+
+  function hidePopup() {
+    popup.classList.remove("show");
+    overlay.classList.remove("show");
+
+    if (redirectToLoginAfterPopup) {
+      registerForm.classList.add("hidden");
+      recoveryForm.classList.add("hidden");
+      loginForm.classList.remove("hidden");
+      toggleToLogin.classList.add("hidden");
+      toggleToRegister.classList.remove("hidden");
+      formTitle.textContent = "Entrar no FarmaLife";
+      redirectToLoginAfterPopup = false;
+    }
+  }
+
+  closePopup.addEventListener("click", hidePopup);
+  overlay.addEventListener("click", hidePopup);
+
+  // Registro
+  registerForm.addEventListener("submit", e => {
+    e.preventDefault();
+    const name = document.getElementById("regName").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const password = document.getElementById("regPassword").value;
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if (users.some(user => user.email === email)) {
+      showPopup("Este email já está cadastrado!");
+      return;
+    }
+
+    users.push({ name, email, password });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    showPopup("Conta criada com sucesso! Agora faça login.", true);
+
+    registerForm.reset();
+  });
+
+  // Login
+  loginForm.addEventListener("submit", e => {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    const user = users.find(user => user.email === email && user.password === password);
+
+    if (user) {
+      window.location.href = "farmaAI.html";
+    } else {
+      showPopup("Email ou senha incorretos!");
+    }
+  });
+
+  // Recuperação - verificar email
+  recoveryForm.addEventListener("submit", e => {
+    e.preventDefault();
+    const email = recoveryForm.querySelector("input[type='email']").value.trim();
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const user = users.find(user => user.email === email);
+
+    if (user) {
+      resetEmail = email;
+      showPopup(`Digite a nova senha para <b>${email}</b>:`, false, true);
+    } else {
+      showPopup("Este email não está cadastrado!");
+    }
+  });
+
+  // Alternar para login
+  toggleToLogin.addEventListener("click", () => {
+    registerForm.classList.add("hidden");
+    recoveryForm.classList.add("hidden");
+    loginForm.classList.remove("hidden");
+    toggleToLogin.classList.add("hidden");
+    toggleToRegister.classList.remove("hidden");
+    formTitle.textContent = "Entrar no FarmaLife";
+  });
+
+  // Alternar para registro
+  toggleToRegister.addEventListener("click", () => {
+    loginForm.classList.add("hidden");
+    recoveryForm.classList.add("hidden");
+    registerForm.classList.remove("hidden");
+    toggleToRegister.classList.add("hidden");
+    toggleToLogin.classList.remove("hidden");
+    formTitle.textContent = "Criar Conta";
+  });
+
+  // Ir para recuperação
+  toRecovery.addEventListener("click", () => {
+    loginForm.classList.add("hidden");
+    recoveryForm.classList.remove("hidden");
+    formTitle.textContent = "Recuperar Senha";
+  });
+
+  // Voltar do recovery para login
+  backToLogin.addEventListener("click", () => {
+    recoveryForm.classList.add("hidden");
+    loginForm.classList.remove("hidden");
+    formTitle.textContent = "Entrar no FarmaLife";
+  });
+});
+</script>
+
+
 </body>
 </html>
