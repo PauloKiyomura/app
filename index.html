@@ -128,6 +128,11 @@
   </div>
 
   <script>
+    function salvarNome() {
+    const nome = document.getElementById("nome").value; // pega o campo de nome
+    localStorage.setItem("usuarioNome", nome); // salva no localStorage
+    window.location.href = "farmaAI.html"; // redireciona para o dashboard
+  }
 document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.getElementById("registerForm");
   const loginForm = document.getElementById("loginForm");
@@ -292,3 +297,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
