@@ -91,44 +91,25 @@
             <span class="text-xl font-semibold text-blue-600">Farma<span class="text-green-500">Life</span></span>
         </div>
         <div class="flex items-center space-x-4">
-            <button class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
+            <button class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 relative">
                 <i class="fas fa-bell"></i>
-                <span class="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full"></span>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
-            <div
-                class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
-                JP</div>
+            <!-- Ícone com iniciais dinâmicas -->
+            <div id="userIcon"
+                class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold cursor-pointer">
+                U
+            </div>
         </div>
     </nav>
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-6">
-        <!-- Dashboard Header -->
+        <!-- Dashboard Header com saudação -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Olá, João Pedro!</h1>
-                <p class="text-gray-600">Hoje é dia 15/06/2023 - Quinta-feira</p>
-            </div>
-            <div class="mt-4 md:mt-0 flex space-x-3">
-            </div>
-        </div>
-
-        <!-- Health Status -->
-        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white mb-8 shadow-lg">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h2 class="text-xl font-semibold mb-2">Seu Status de Saúde</h2>
-                    <p class="mb-4">Você está com 82% de adesão ao tratamento esta semana!</p>
-                    <button class="px-4 py-2 bg-white text-blue-600 rounded-full font-medium hover:bg-gray-100">
-                        Ver Detalhes
-                    </button>
-                </div>
-                <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                    <div class="text-center">
-                        <span class="block text-3xl font-bold">82%</span>
-                        <span class="text-xs">adesão</span>
-                    </div>
-                </div>
+                <h1 id="boasVindas" class="text-2xl font-bold text-gray-800"></h1>
+                <p class="text-gray-600" id="dataHoje"></p>
             </div>
         </div>
 
@@ -153,7 +134,7 @@
                 <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
                     <i class="fas fa-file-prescription text-purple-600"></i>
                 </div>
-                <p class="font-medium">Receitas</p>
+                <p class="font-medium">Saúde</p>
             </button>
             <a href="profile.html"
                 class="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer text-center">
@@ -165,41 +146,19 @@
         </div>
 
         <!-- Medication Reminders -->
-        <div class="mb-8">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-semibold text-gray-800">Lembretes de Medicamentos</h2>
-                <a href="medicines.html" class="text-blue-600 hover:text-blue-800 font-medium">Ver todos</a>
-            </div>
+        <!-- Medication Reminders -->
+<div class="mb-8">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold text-gray-800">Lembretes de Medicamentos</h2>
+        <a href="medicines.html" class="text-blue-600 hover:text-blue-800 font-medium">Ver todos</a>
+    </div>
 
-            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div class="p-4 border-b border-gray-100 flex justify-between items-center">
-                    <div>
-                        <h3 class="font-medium">Dipirona Monoidratada 500mg</h3>
-                        <p class="text-sm text-gray-500">Tomar 1 comprimido - 2x ao dia</p>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Próxima
-                            dose: 14:00</span>
-                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-full">
-                            <i class="fas fa-check"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="p-4 flex justify-between items-center">
-                    <div>
-                        <h3 class="font-medium">Omeprazol 20mg</h3>
-                        <p class="text-sm text-gray-500">Tomar 1 cápsula - 1x ao dia</p>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Em
-                            estoque: 3 dias</span>
-                        <a href="pharmacy.html" class="p-2 text-blue-600 hover:bg-blue-50 rounded-full">
-                            <i class="fas fa-shopping-cart"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden" id="remindersContainer">
+    <!-- Medicamentos vão ser renderizados aqui -->
+</div>
+
+</div>
+
 
         <!-- Prescription Scan -->
         <div class="mb-8">
@@ -258,22 +217,71 @@
     </div>
 
     <script>
-        // Interactive elements
+      
+            function renderReminders() {
+    const remindersContainer = document.querySelector("#remindersContainer"); 
+    remindersContainer.innerHTML = "";
+
+    let medicines = JSON.parse(localStorage.getItem("medicines")) || [];
+
+    if (medicines.length === 0) {
+        remindersContainer.innerHTML = `<p class="text-gray-500">Nenhum medicamento cadastrado</p>`;
+        return;
+    }
+
+    medicines.forEach(med => {
+        const reminderCard = document.createElement("div");
+        reminderCard.className = "p-4 border-b border-gray-100 flex justify-between items-center";
+        reminderCard.innerHTML = `
+            <div>
+                <h3 class="font-medium">${med.name}</h3>
+                <p class="text-sm text-gray-500">${med.dosage} - ${med.frequency}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                ${
+                    med.times.length > 0
+                    ? `<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Próxima dose: ${med.times[0]}</span>`
+                    : `<span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Sem horário</span>`
+                }
+                <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-full">
+                    <i class="fas fa-check"></i>
+                </button>
+            </div>
+        `;
+        remindersContainer.appendChild(reminderCard);
+    });
+}
+
+renderReminders();
+
+
+// Função para confirmar dose tomada
+function confirmarDose(index) {
+    let medicamentos = JSON.parse(localStorage.getItem("medicamentos")) || [];
+    alert(`Dose de ${medicamentos[index].nome} confirmada!`);
+}
         document.addEventListener('DOMContentLoaded', function () {
-            // Medication reminders completion
-            const reminderButtons = document.querySelectorAll('.reminder-pill button');
-            reminderButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    if (this.innerHTML.includes('fa-check')) {
-                        const pill = this.closest('.reminder-pill');
-                        pill.style.opacity = '0.5';
-                        this.innerHTML = '<i class="fas fa-redo"></i>';
-                    } else {
-                        const pill = this.closest('.reminder-pill');
-                        pill.style.opacity = '1';
-                        this.innerHTML = '<i class="fas fa-check"></i>';
-                    }
-                });
+            // Pegar nome do localStorage e mostrar na saudação
+            const usuarioNome = localStorage.getItem("usuarioNome") || "Usuário";
+            document.getElementById("boasVindas").textContent = `Olá, ${usuarioNome}!`;
+
+            // Mostrar a data de hoje
+            const hoje = new Date();
+            const opcoes = { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' };
+            document.getElementById("dataHoje").textContent = hoje.toLocaleDateString('pt-BR', opcoes);
+
+            // Definir iniciais no ícone
+            function getIniciais(nome) {
+                const partes = nome.trim().split(" ");
+                if (partes.length === 1) return partes[0][0].toUpperCase();
+                return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
+            }
+            const userIcon = document.getElementById("userIcon");
+            userIcon.textContent = getIniciais(usuarioNome);
+
+            // Redirecionar para profile.html ao clicar no ícone
+            userIcon.addEventListener("click", () => {
+                window.location.href = "profile.html";
             });
 
             // Prescription scan button
