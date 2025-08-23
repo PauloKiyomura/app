@@ -233,11 +233,55 @@
         });
 
         saveMedicineBtn.addEventListener('click', () => {
-            const name = document.getElementById('medicineName').value;
-            const quantity = document.getElementById('medicineQuantity').value;
-            const dosage = document.getElementById('medicineDosage').value;
-            const frequency = medicineFrequency.value;
-            const status = document.querySelector('input[name="medicineStatus"]:checked').value;
+            // Dentro do saveMedicineBtn.addEventListener
+const newMedicine = {
+    name,
+    quantity,
+    dosage,
+    frequency,
+    times,
+    status
+};
+
+// Recupera lista atual do localStorage
+let medicines = JSON.parse(localStorage.getItem("medicines")) || [];
+medicines.push(newMedicine);
+localStorage.setItem("medicines", JSON.stringify(medicines));
+
+            function renderMedicines() {
+    medicineList.innerHTML = "";
+    let medicines = JSON.parse(localStorage.getItem("medicines")) || [];
+    
+    medicines.forEach(med => {
+        const statusTag = med.status === "active"
+            ? '<span class="status-tag bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Ativo</span>'
+            : '<span class="status-tag bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">Pausado</span>';
+
+        const medicineCard = document.createElement("div");
+        medicineCard.className = "medicine-card bg-white rounded-lg p-4 shadow-sm border-l-4 border-blue-500 mb-3";
+        medicineCard.innerHTML = `
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="font-semibold text-gray-800">${med.name} (${med.quantity})</h3>
+                    <p class="text-sm text-gray-600">${med.dosage} - ${med.frequency}</p>
+                    <div class="flex flex-wrap mt-2 space-x-2">
+                        ${med.times.map(t => `<span class="status-tag bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">${t}</span>`).join("")}
+                        ${statusTag}
+                    </div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-600" aria-label="Opções">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        `;
+        medicineList.prepend(medicineCard);
+    });
+
+    checkEmptyState();
+}
+
+renderMedicines();
+
 
             if (!name || !quantity || !dosage || !frequency) {
                 alert('Por favor, preencha todos os campos obrigatórios');
@@ -292,3 +336,4 @@
     </script>
 </body>
 </html>
+
