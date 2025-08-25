@@ -128,11 +128,6 @@
   </div>
 
   <script>
-    function salvarNome() {
-    const nome = document.getElementById("nome").value; // pega o campo de nome
-    localStorage.setItem("usuarioNome", nome); // salva no localStorage
-    window.location.href = "farmaAI.html"; // redireciona para o dashboard
-  }
 document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.getElementById("registerForm");
   const loginForm = document.getElementById("loginForm");
@@ -150,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const popupMessage = document.getElementById("popupMessage");
 
   let redirectToLoginAfterPopup = false;
-  let resetEmail = null; // armazena email para redefinir senha
+  let resetEmail = null;
 
   function showPopup(message, redirectLogin = false, resetMode = false) {
     popupMessage.innerHTML = message;
@@ -159,7 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
     redirectToLoginAfterPopup = redirectLogin;
 
     if (resetMode) {
-      // Adiciona campo para nova senha no popup
       popupMessage.innerHTML += `
         <input id="newPassword" type="password" placeholder="Nova senha" class="w-full mt-3 p-2 border rounded-lg focus:ring focus:ring-purple-300">
         <button id="confirmReset" class="w-full mt-3 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition">Redefinir Senha</button>
@@ -221,8 +215,10 @@ document.addEventListener("DOMContentLoaded", () => {
     users.push({ name, email, password });
     localStorage.setItem("users", JSON.stringify(users));
 
-    showPopup("Conta criada com sucesso! Agora faça login.", true);
+    // 🔥 salvar nome para usar no farmaAI.html
+    localStorage.setItem("usuarioNome", name);
 
+    showPopup("Conta criada com sucesso! Agora faça login.", true);
     registerForm.reset();
   });
 
@@ -236,13 +232,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const user = users.find(user => user.email === email && user.password === password);
 
     if (user) {
+      // 🔥 salvar nome antes de ir pro dashboard
+      localStorage.setItem("usuarioNome", user.name);
+
       window.location.href = "farmaAI.html";
     } else {
       showPopup("Email ou senha incorretos!");
     }
   });
 
-  // Recuperação - verificar email
+  // Recuperação de senha
   recoveryForm.addEventListener("submit", e => {
     e.preventDefault();
     const email = recoveryForm.querySelector("input[type='email']").value.trim();
@@ -258,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Alternar para login
+  // Alternar telas
   toggleToLogin.addEventListener("click", () => {
     registerForm.classList.add("hidden");
     recoveryForm.classList.add("hidden");
@@ -268,7 +267,6 @@ document.addEventListener("DOMContentLoaded", () => {
     formTitle.textContent = "Entrar no FarmaLife";
   });
 
-  // Alternar para registro
   toggleToRegister.addEventListener("click", () => {
     loginForm.classList.add("hidden");
     recoveryForm.classList.add("hidden");
@@ -278,14 +276,12 @@ document.addEventListener("DOMContentLoaded", () => {
     formTitle.textContent = "Criar Conta";
   });
 
-  // Ir para recuperação
   toRecovery.addEventListener("click", () => {
     loginForm.classList.add("hidden");
     recoveryForm.classList.remove("hidden");
     formTitle.textContent = "Recuperar Senha";
   });
 
-  // Voltar do recovery para login
   backToLogin.addEventListener("click", () => {
     recoveryForm.classList.add("hidden");
     loginForm.classList.remove("hidden");
@@ -293,7 +289,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
-
 
 </body>
 </html>
