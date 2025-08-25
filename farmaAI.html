@@ -147,17 +147,17 @@
 
         <!-- Medication Reminders -->
         <!-- Medication Reminders -->
-<div class="mb-8">
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-800">Lembretes de Medicamentos</h2>
-        <a href="medicines.html" class="text-blue-600 hover:text-blue-800 font-medium">Ver todos</a>
-    </div>
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-800">Lembretes de Medicamentos</h2>
+                <a href="medicines.html" class="text-blue-600 hover:text-blue-800 font-medium">Ver todos</a>
+            </div>
 
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden" id="remindersContainer">
-    <!-- Medicamentos vão ser renderizados aqui -->
-</div>
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden" id="remindersContainer">
+                <!-- Medicamentos vão ser renderizados aqui -->
+            </div>
 
-</div>
+        </div>
 
 
         <!-- Prescription Scan -->
@@ -217,49 +217,48 @@
     </div>
 
     <script>
-      
-            function renderReminders() {
-    const remindersContainer = document.querySelector("#remindersContainer"); 
-    remindersContainer.innerHTML = "";
 
-    let medicines = JSON.parse(localStorage.getItem("medicines")) || [];
+        function renderReminders() {
+            const remindersContainer = document.querySelector("#remindersContainer");
+            remindersContainer.innerHTML = "";
 
-    if (medicines.length === 0) {
-        remindersContainer.innerHTML = `<p class="text-gray-500">Nenhum medicamento cadastrado</p>`;
-        return;
-    }
+            let medicines = JSON.parse(localStorage.getItem("medicines")) || [];
 
-    medicines.forEach(med => {
-        const reminderCard = document.createElement("div");
-        reminderCard.className = "p-4 border-b border-gray-100 flex justify-between items-center";
-        reminderCard.innerHTML = `
+            if (medicines.length === 0) {
+                return; // 👉 simplesmente não renderiza nada
+            }
+
+            medicines.forEach(med => {
+                const reminderCard = document.createElement("div");
+                reminderCard.className = "p-4 border-b border-gray-100 flex justify-between items-center";
+                reminderCard.innerHTML = `
             <div>
                 <h3 class="font-medium">${med.name}</h3>
                 <p class="text-sm text-gray-500">${med.dosage} - ${med.frequency}</p>
             </div>
             <div class="flex items-center space-x-2">
-                ${
-                    med.times.length > 0
-                    ? `<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Próxima dose: ${med.times[0]}</span>`
-                    : `<span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Sem horário</span>`
-                }
+                ${med.times.length > 0
+                        ? `<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Próxima dose: ${med.times[0]}</span>`
+                        : `<span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Sem horário</span>`
+                    }
                 <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-full">
                     <i class="fas fa-check"></i>
                 </button>
             </div>
         `;
-        remindersContainer.appendChild(reminderCard);
-    });
-}
-
-renderReminders();
+                remindersContainer.appendChild(reminderCard);
+            });
+        }
 
 
-// Função para confirmar dose tomada
-function confirmarDose(index) {
-    let medicamentos = JSON.parse(localStorage.getItem("medicamentos")) || [];
-    alert(`Dose de ${medicamentos[index].nome} confirmada!`);
-}
+        renderReminders();
+
+
+        // Função para confirmar dose tomada
+        function confirmarDose(index) {
+            let medicamentos = JSON.parse(localStorage.getItem("medicamentos")) || [];
+            alert(`Dose de ${medicamentos[index].nome} confirmada!`);
+        }
         document.addEventListener('DOMContentLoaded', function () {
             // Pegar nome do localStorage e mostrar na saudação
             const usuarioNome = localStorage.getItem("usuarioNome") || "Usuário";
