@@ -1,322 +1,574 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FarmaAI - Meu Perfil</title>
-    <link rel="icon" type="image.ico" sizes="16x16" href="icone.ico">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #3b82f6;
-            --primary-dark: #2563eb;
-            --secondary: #10b981;
-            --dark: #1e293b;
-            --light: #f8fafc;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f0f4f8;
-            color: var(--dark);
-            padding-bottom: 80px;
-        }
-        
-        .profile-section {
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-        }
-        
-        .menu-item {
-            transition: all 0.2s ease;
-        }
-        
-        .menu-item:hover {
-            transform: translateX(5px);
-            background-color: #f1f5f9;
-        }
-        
-        .health-metric {
-            transition: all 0.3s ease;
-        }
-        
-        .health-metric:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px -5px rgba(0,0,0,0.1);
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .pulse-animation {
-            animation: pulse 2s infinite;
-        }
-        
-        .edit-icon {
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-        
-        .editable:hover .edit-icon {
-            opacity: 1;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarmaAI - Meu Perfil</title>
+  <link rel="icon" type="image.ico" sizes="16x16" href="icone.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary: #10b981;
+      --dark: #1e293b;
+      --light: #f8fafc;
+    }
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f0f4f8;
+      color: var(--dark);
+      padding-bottom: 80px;
+    }
+    .profile-section {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    }
+    .menu-item {
+      transition: all 0.2s ease;
+    }
+    .menu-item:hover {
+      transform: translateX(5px);
+      background-color: #f1f5f9;
+    }
+    .health-metric {
+      transition: all 0.3s ease;
+    }
+    .health-metric:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.1);
+    }
+    @keyframes pulse {
+      0% {transform: scale(1);}
+      50% {transform: scale(1.05);}
+      100% {transform: scale(1);}
+    }
+    .pulse-animation {animation: pulse 2s infinite;}
+
+    /* Toast (notificação) */
+    .toast {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: rgba(17, 24, 39, 0.95);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      opacity: 0;
+      transform: translateY(-12px);
+      transition: all 0.25s ease;
+      z-index: 1000;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Modal base para fade/scale suave */
+    .modal-enter {opacity: 0; transform: scale(0.98);}
+    .modal-enter-active {opacity: 1; transform: scale(1); transition: all 150ms ease;}
+    .modal-exit {opacity: 1; transform: scale(1);}
+    .modal-exit-active {opacity: 0; transform: scale(0.98); transition: all 120ms ease;}
+  </style>
 </head>
+
 <body>
-    <!-- Navbar -->
-    <nav class="bg-white shadow-sm py-3 px-4 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center">
-            <a href="farmaAI.html" class="mr-2">
-                <i class="fas fa-chevron-left text-gray-600"></i>
-            </a>
-            <h1 class="text-lg font-semibold">Meu Perfil</h1>
+  <!-- Navbar -->
+  <nav class="bg-white shadow-sm py-3 px-4 flex justify-between items-center sticky top-0 z-50">
+    <div class="flex items-center">
+      <a href="farmaAI.html" class="mr-2">
+        <i class="fas fa-chevron-left text-gray-600"></i>
+      </a>
+      <h1 class="text-lg font-semibold">Meu Perfil</h1>
+    </div>
+    <button class="p-2 rounded-full text-gray-600 hover:bg-gray-100">
+      <i class="fas fa-cog"></i>
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4">
+    <!-- Profile Header -->
+    <section class="profile-section rounded-2xl p-6 mb-6 mt-4 text-center relative overflow-hidden">
+      <div class="relative z-10">
+        <div onclick="abrirModal('foto','Foto de Perfil')"
+          class="w-24 h-24 rounded-full border-4 border-white bg-white shadow-md mx-auto mb-4 relative cursor-pointer">
+          <img id="fotoPerfil" src="https://placehold.co/96x96"
+               alt="Foto de perfil do usuário mostrando uma pessoa sorrindo"
+               class="w-full h-full rounded-full object-cover">
+          <div class="absolute bottom-0 right-0 bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center">
+            <i class="fas fa-pencil-alt text-xs"></i>
+          </div>
         </div>
-        <button class="p-2 rounded-full text-gray-600 hover:bg-gray-100">
-            <i class="fas fa-cog"></i>
+        <h2 class="font-bold text-xl mb-1 inline-flex items-center">
+          <span id="nomePerfil">João Pedro Silva</span>
+          <button onclick="abrirModal('nomePerfil','Nome')" class="ml-2 text-blue-600">
+            <i class="fas fa-pencil-alt text-xs"></i>
+          </button>
+        </h2>
+        <p class="text-gray-700 mb-4">joao.silva@email.com</p>
+        <button class="px-4 py-2 bg-white text-blue-600 rounded-full text-sm font-medium inline-flex items-center mx-auto">
+          <i class="fas fa-star mr-2 text-yellow-400"></i> Plano Premium
         </button>
-    </nav>
+      </div>
+    </section>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4">
-        <!-- Profile Header -->
-        <section class="profile-section rounded-2xl p-6 mb-6 mt-4 text-center relative overflow-hidden">
-            <div class="relative z-10">
-                <div class="w-24 h-24 rounded-full border-4 border-white bg-white shadow-md mx-auto mb-4 relative editable">
-                    <img src="https://placehold.co/96x96" alt="Foto de perfil do usuário mostrando uma pessoa sorrindo" class="w-full h-full rounded-full object-cover">
-                    <div class="edit-icon absolute bottom-0 right-0 bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center">
-                        <i class="fas fa-pencil-alt text-xs"></i>
-                    </div>
-                </div>
-                <h2 class="font-bold text-xl mb-1 editable relative inline-block">
-                    João Pedro Silva
-                    <span class="edit-icon absolute -right-6 top-1/2 transform -translate-y-1/2 text-blue-600">
-                        <i class="fas fa-pencil-alt text-xs"></i>
-                    </span>
-                </h2>
-                <p class="text-gray-700 mb-4">joao.silva@email.com</p>
-                <button class="px-4 py-2 bg-white text-blue-600 rounded-full text-sm font-medium inline-flex items-center mx-auto">
-                    <i class="fas fa-star mr-2 text-yellow-400"></i> Plano Premium
-                </button>
-            </div>
-        </section>
+    <!-- Health Overview -->
+    <section class="mb-6">
+      <h2 class="font-semibold text-lg mb-3">Saúde em Dia</h2>
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Pressão -->
+        <div class="health-metric bg-white rounded-xl p-4 shadow-sm text-center relative">
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+            <i class="fas fa-heartbeat text-blue-600"></i>
+          </div>
+          <h3 class="font-medium text-sm mb-1">Pressão Arterial</h3>
+          <p id="pressaoValor" class="text-2xl font-bold text-blue-600">12/8</p>
+          <button onclick="abrirModal('pressaoValor','Pressão Arterial')"
+            class="absolute top-2 right-2 text-blue-500 hover:text-blue-700">
+            <i class="fas fa-pencil-alt text-sm"></i>
+          </button>
+          <p class="text-green-600 text-xs">Normal</p>
+        </div>
 
-        <!-- Health Overview -->
-        <section class="mb-6">
-            <h2 class="font-semibold text-lg mb-3">Saúde em Dia</h2>
-            <div class="grid grid-cols-2 gap-3">
-                <div class="health-metric bg-white rounded-xl p-4 shadow-sm text-center">
-                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <i class="fas fa-heartbeat text-blue-600"></i>
-                    </div>
-                    <h3 class="font-medium text-sm mb-1">Pressão Arterial</h3>
-                    <p class="text-2xl font-bold text-blue-600">12/8</p>
-                    <p class="text-green-600 text-xs">Normal</p>
-                </div>
-                <div class="health-metric bg-white rounded-xl p-4 shadow-sm text-center">
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <i class="fas fa-weight text-green-600"></i>
-                    </div>
-                    <h3 class="font-medium text-sm mb-1">IMC</h3>
-                    <p class="text-2xl font-bold text-green-600">22.5</p>
-                    <p class="text-green-600 text-xs">Saudável</p>
-                </div>
-            </div>
-        </section>
+        <!-- IMC -->
+        <div class="health-metric bg-white rounded-xl p-4 shadow-sm text-center relative">
+          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+            <i class="fas fa-weight text-green-600"></i>
+          </div>
+          <h3 class="font-medium text-sm mb-1">IMC</h3>
+          <p id="imcValor" class="text-2xl font-bold text-green-600">22.5</p>
+          <button onclick="abrirModal('imcValor','IMC')"
+            class="absolute top-2 right-2 text-green-500 hover:text-green-700">
+            <i class="fas fa-pencil-alt text-sm"></i>
+          </button>
+          <p class="text-green-600 text-xs">Saudável</p>
+        </div>
+      </div>
+    </section>
 
-        <!-- Health Goals -->
-        <section class="mb-6">
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="font-semibold text-lg">Metas de Saúde</h2>
-                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Ver todas</button>
-            </div>
-            <div class="bg-white rounded-xl shadow-sm p-4">
-                <div class="flex items-center justify-between mb-2">
-                    <div>
-                        <h3 class="font-medium">Tratamento Completo</h3>
-                        <p class="text-gray-500 text-sm">Adesão aos medicamentos</p>
-                    </div>
-                    <span class="text-blue-600 font-bold">82%</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div class="bg-blue-600 h-2 rounded-full" style="width: 82%"></div>
-                </div>
-                
-                <div class="flex items-center justify-between mb-2">
-                    <div>
-                        <h3 class="font-medium">Passos Diários</h3>
-                        <p class="text-gray-500 text-sm">Meta de 10.000 passos</p>
-                    </div>
-                    <span class="text-blue-600 font-bold">65%</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-green-500 h-2 rounded-full" style="width: 65%"></div>
-                </div>
-            </div>
-        </section>
+    <!-- Health Goals (Passos) -->
+    <section class="mb-6">
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="font-semibold text-lg">Metas de Saúde</h2>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-4 relative">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-medium">Passos Diários</h3>
+            <p class="text-gray-500 text-sm">Meta configurável</p>
+          </div>
+          <span id="passosValor" class="text-blue-600 font-bold">65%</span>
+          <button onclick="abrirModalPassos()" class="ml-2 text-blue-500 hover:text-blue-700">
+            <i class="fas fa-pencil-alt text-sm"></i>
+          </button>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div id="passosBar" class="bg-green-500 h-2 rounded-full" style="width: 65%"></div>
+        </div>
+      </div>
+    </section>
 
-        <!-- Quick Actions -->
-        <section class="mb-6">
-            <h2 class="font-semibold text-lg mb-3">Ações Rápidas</h2>
-            <div class="grid grid-cols-4 gap-2 text-center">
-                <button class="bg-white rounded-lg p-3 shadow-sm hover:shadow-md">
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-1">
-                        <i class="fas fa-file-prescription text-blue-600 text-sm"></i>
-                    </div>
-                    <span class="text-xs">Minhas Receitas</span>
-                </button>
-                <button class="bg-white rounded-lg p-3 shadow-sm hover:shadow-md">
-                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-1">
-                        <i class="fas fa-user-md text-purple-600 text-sm"></i>
-                    </div>
-                    <span class="text-xs">Médicos</span>
-                </button>
-                <button class="bg-white rounded-lg p-3 shadow-sm hover:shadow-md">
-                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-1">
-                        <i class="fas fa-heart text-yellow-600 text-sm"></i>
-                    </div>
-                    <span class="text-xs">Saúde</span>
-                </button>
-                <button class="bg-white rounded-lg p-3 shadow-sm hover:shadow-md">
-                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-1">
-                        <i class="fas fa-file-invoice-dollar text-green-600 text-sm"></i>
-                    </div>
-                    <span class="text-xs">Planos</span>
-                </button>
-            </div>
-        </section>
+    <!-- Emergência -->
+    <section class="mt-6">
+      <div class="bg-red-50 border border-red-200 rounded-xl p-4">
+        <div class="flex items-start">
+          <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+            <i class="fas fa-exclamation-triangle text-red-600"></i>
+          </div>
+          <div>
+            <h3 class="font-medium text-red-800 mb-1">Emergência Médica</h3>
+            <p class="text-red-600 text-sm mb-2">Contatos rápidos para situações de emergência</p>
+            <button onclick="abrirEmergencia()"
+              class="px-4 py-2 bg-red-600 text-white rounded-full text-sm font-medium hover:bg-red-700 inline-flex items-center pulse-animation">
+              <i class="fas fa-phone-alt mr-2"></i> Mostrar Contatos
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <!-- Menu Options -->
-        <section>
-            <h2 class="font-semibold text-lg mb-3">Configurações</h2>
-            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                <!-- Menu Item 1 -->
-                <a href="#" class="menu-item flex items-center justify-between p-4 border-b border-gray-100">
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                            <i class="fas fa-bell text-blue-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-medium">Notificações</h3>
-                            <p class="text-gray-500 text-sm">Lembretes e alertas</p>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-right text-gray-400"></i>
-                </a>
-                
-                <!-- Menu Item 2 -->
-                <a href="#" class="menu-item flex items-center justify-between p-4 border-b border-gray-100">
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-                            <i class="fas fa-shield-alt text-purple-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-medium">Privacidade</h3>
-                            <p class="text-gray-500 text-sm">Controle seus dados</p>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-right text-gray-400"></i>
-                </a>
-                
-                <!-- Menu Item 3 -->
-                <a href="#" class="menu-item flex items-center justify-between p-4 border-b border-gray-100">
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                            <i class="fas fa-lock text-green-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-medium">Segurança</h3>
-                            <p class="text-gray-500 text-sm">Senha e autenticação</p>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-right text-gray-400"></i>
-                </a>
-                
-                <!-- Menu Item 4 -->
-                <a href="#" class="menu-item flex items-center justify-between p-4">
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
-                            <i class="fas fa-question-circle text-red-600"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-medium">Ajuda & Suporte</h3>
-                            <p class="text-gray-500 text-sm">Central de ajuda</p>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-right text-gray-400"></i>
-                </a>
+    <!-- Configurações -->
+    <section class="mt-6">
+      <h2 class="font-semibold text-lg mb-3">Configurações</h2>
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <a href="#" class="menu-item flex items-center justify-between p-4 border-b border-gray-100">
+          <div class="flex items-center">
+            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+              <i class="fas fa-bell text-blue-600"></i>
             </div>
-        </section>
-
-        <!-- Emergency Section -->
-        <section class="mt-6">
-            <div class="bg-red-50 border border-red-200 rounded-xl p-4">
-                <div class="flex items-start">
-                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
-                        <i class="fas fa-exclamation-triangle text-red-600"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-red-800 mb-1">Emergência Médica</h3>
-                        <p class="text-red-600 text-sm mb-2">Contatos rápidos para situações de emergência</p>
-                        <button class="px-4 py-2 bg-red-600 text-white rounded-full text-sm font-medium hover:bg-red-700 inline-flex items-center pulse-animation">
-                            <i class="fas fa-phone-alt mr-2"></i> Mostrar Contatos
-                        </button>
-                    </div>
-                </div>
+            <div>
+              <h3 class="font-medium">Notificações</h3>
+              <p class="text-gray-500 text-sm">Lembretes e alertas</p>
             </div>
-        </section>
-    </main>
-
-    <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg flex justify-around items-center py-2 px-2 z-50">
-        <a href="farmaAI.html" class="flex flex-col items-center text-gray-500 py-1">
-            <i class="fas fa-home text-sm"></i>
-            <span class="text-xs mt-1">Início</span>
+          </div>
+          <i class="fas fa-chevron-right text-gray-400"></i>
         </a>
-        <a href="medicines.html" class="flex flex-col items-center text-gray-500 py-1">
-            <i class="fas fa-pills text-sm"></i>
-            <span class="text-xs mt-1">Medicações</span>
-        </a>
-        <a href="pharmacy.html" class="flex flex-col items-center text-gray-500 py-1">
-            <i class="fas fa-shopping-cart text-sm"></i>
-            <span class="text-xs mt-1">Farmácia</span>
-        </a>
-        <a href="#" class="flex flex-col items-center text-blue-600 py-1">
-            <i class="fas fa-user text-sm"></i>
-            <span class="text-xs mt-1">Perfil</span>
-        </a>
-    </nav>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Make profile picture and name editable
-            const editableElements = document.querySelectorAll('.editable');
-            
-            editableElements.forEach(element => {
-                element.addEventListener('click', function() {
-                    if (this.classList.contains('editable')) {
-                        if (this.querySelector('img')) {
-                            // In a real app, would open image picker here
-                            alert('Abrir seletor de imagens para foto de perfil');
-                        } else {
-                            const newName = prompt('Digite seu novo nome:', 'João Pedro Silva');
-                            if (newName && newName.trim() !== '') {
-                                this.querySelector('h2').textContent = newName;
-                            }
-                        }
-                    }
-                });
-            });
-            
-            // Emergency button functionality
-            const emergencyBtn = document.querySelector('.pulse-animation');
-            emergencyBtn.addEventListener('click', function() {
-                alert('Contatos de emergência:\n\n- SAMU: 192\n- Bombeiros: 193\n- Polícia: 190\n\nO FarmaAI também compartilhou sua localização com os serviços de emergência.');
-            });
-        });
-    </script>
+        <a href="#" class="menu-item flex items-center justify-between p-4 border-b border-gray-100">
+          <div class="flex items-center">
+            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+              <i class="fas fa-shield-alt text-purple-600"></i>
+            </div>
+            <div>
+              <h3 class="font-medium">Privacidade</h3>
+              <p class="text-gray-500 text-sm">Controle seus dados</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-gray-400"></i>
+        </a>
+
+        <a href="#" class="menu-item flex items-center justify-between p-4 border-b border-gray-100">
+          <div class="flex items-center">
+            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+              <i class="fas fa-lock text-green-600"></i>
+            </div>
+            <div>
+              <h3 class="font-medium">Segurança</h3>
+              <p class="text-gray-500 text-sm">Senha e autenticação</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-gray-400"></i>
+        </a>
+
+        <a href="#" class="menu-item flex items-center justify-between p-4">
+          <div class="flex items-center">
+            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
+              <i class="fas fa-question-circle text-red-600"></i>
+            </div>
+            <div>
+              <h3 class="font-medium">Ajuda & Suporte</h3>
+              <p class="text-gray-500 text-sm">Central de ajuda</p>
+            </div>
+          </div>
+          <i class="fas fa-chevron-right text-gray-400"></i>
+        </a>
+      </div>
+    </section>
+
+    <!-- Botão Sair -->
+    <section class="mt-6 mb-20">
+      <button onclick="window.location.href='index.html'"
+        class="w-full px-4 py-3 bg-gray-700 text-white rounded-xl font-medium hover:bg-gray-900">
+        <i class="fas fa-sign-out-alt mr-2"></i> Sair
+      </button>
+    </section>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg flex justify-around items-center py-2 px-2 z-50">
+    <a href="farmaAI.html" class="flex flex-col items-center text-gray-500 py-1">
+      <i class="fas fa-home text-sm"></i>
+      <span class="text-xs mt-1">Início</span>
+    </a>
+    <a href="medicines.html" class="flex flex-col items-center text-gray-500 py-1">
+      <i class="fas fa-pills text-sm"></i>
+      <span class="text-xs mt-1">Medicações</span>
+    </a>
+    <a href="pharmacy.html" class="flex flex-col items-center text-gray-500 py-1">
+      <i class="fas fa-shopping-cart text-sm"></i>
+      <span class="text-xs mt-1">Farmácia</span>
+    </a>
+    <a href="#" class="flex flex-col items-center text-blue-600 py-1">
+      <i class="fas fa-user text-sm"></i>
+      <span class="text-xs mt-1">Perfil</span>
+    </a>
+  </nav>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Modal genérico (Nome, Foto, PA, IMC) -->
+  <div id="modalEdicao" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div id="modalEdicaoCard" class="bg-white rounded-2xl p-6 w-80 text-center shadow-lg">
+      <h2 id="modalTitulo" class="text-lg font-bold text-gray-800 mb-3">Editar</h2>
+      <input id="modalInput" type="text"
+        class="w-full border rounded-lg p-2 mb-4 focus:ring-2 focus:ring-blue-500" />
+      <div class="flex space-x-2">
+        <button onclick="salvarValor()"
+          class="flex-1 bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700">Salvar</button>
+        <button onclick="fecharModal()"
+          class="flex-1 bg-gray-200 text-gray-700 rounded-lg py-2 hover:bg-gray-300">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Passos (configurável + adicionar) -->
+  <div id="modalPassos" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div id="modalPassosCard" class="bg-white rounded-2xl p-6 w-[22rem] shadow-lg">
+      <h2 class="text-lg font-bold text-gray-800 mb-4">Gerenciar Passos</h2>
+
+      <div class="grid gap-3">
+        <div>
+          <label class="text-sm text-gray-600">Meta diária</label>
+          <input id="passosMetaInput" type="number" min="1" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-500" />
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-3">
+          <p class="text-sm text-gray-600">Progresso atual</p>
+          <div class="flex justify-between text-sm mt-1">
+            <span id="passosAtuaisLabel" class="font-medium">0 passos</span>
+            <span id="passosPercentLabel" class="font-medium">0%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div id="modalPassosBar" class="bg-green-500 h-2 rounded-full" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-sm text-gray-600">Adicionar passos</label>
+          <div class="flex gap-2 mt-1">
+            <input id="passosAdicionarInput" type="number" placeholder="Ex: 500"
+              class="flex-1 border rounded-lg p-2 focus:ring-2 focus:ring-blue-500" />
+            <button onclick="adicionarPassos()"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Adicionar</button>
+          </div>
+          <div class="flex gap-2 mt-2">
+            <button onclick="adicionarRapido(1000)" class="flex-1 border rounded-lg py-2 hover:bg-gray-50">+1000</button>
+            <button onclick="adicionarRapido(500)" class="flex-1 border rounded-lg py-2 hover:bg-gray-50">+500</button>
+            <button onclick="adicionarRapido(100)" class="flex-1 border rounded-lg py-2 hover:bg-gray-50">+100</button>
+          </div>
+        </div>
+
+        <div class="flex gap-2 mt-2">
+          <button onclick="salvarMeta()"
+            class="flex-1 bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700">Salvar Meta</button>
+          <button onclick="fecharModalPassos()"
+            class="flex-1 bg-gray-200 text-gray-700 rounded-lg py-2 hover:bg-gray-300">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Emergência -->
+  <div id="modalEmergencia" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div id="modalEmergenciaCard" class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-lg text-center">
+      <h2 class="text-xl font-bold text-red-600 mb-3">🚨 Emergência Médica</h2>
+      <p class="text-gray-700 mb-4">Contatos rápidos para situações críticas:</p>
+      <ul class="text-left mb-4 text-sm">
+        <li><b>SAMU:</b> 192</li>
+        <li><b>Bombeiros:</b> 193</li>
+        <li><b>Polícia:</b> 190</li>
+      </ul>
+      <p class="text-xs text-gray-500 mb-4">
+        Sua localização será compartilhada automaticamente com os serviços de emergência.
+      </p>
+      <button onclick="fecharEmergencia()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 w-full">Fechar</button>
+    </div>
+  </div>
+
+  <script>
+    // -------------------------
+    // Estado de passos
+    // -------------------------
+    let passosMeta = 10000; // configurável
+    let passosAtuais = 0;   // calculado a partir do % inicial
+
+    // Inicializa com o % exibido no card (ex: "65%")
+    function initPassosFromCard() {
+      const percentStr = document.getElementById("passosValor").textContent.replace("%","").trim();
+      const percent = Math.max(0, Math.min(100, parseInt(percentStr) || 0));
+      passosAtuais = Math.round((percent / 100) * passosMeta);
+      atualizarUIProgresso();
+    }
+
+    function calcularPercentual() {
+      if (passosMeta <= 0) return 0;
+      return Math.round((passosAtuais / passosMeta) * 100);
+    }
+
+    function atualizarUIProgresso() {
+      const percent = Math.max(0, Math.min(100, calcularPercentual()));
+      document.getElementById("passosValor").textContent = percent + "%";
+      document.getElementById("passosBar").style.width = percent + "%";
+
+      // Atualiza dentro do modal de passos (se estiver aberto)
+      const labelAtuais = document.getElementById("passosAtuaisLabel");
+      const labelPercent = document.getElementById("passosPercentLabel");
+      const modalBar = document.getElementById("modalPassosBar");
+      if (labelAtuais && labelPercent && modalBar) {
+        labelAtuais.textContent = `${passosAtuais} passos`;
+        labelPercent.textContent = percent + "%";
+        modalBar.style.width = percent + "%";
+      }
+    }
+
+    // -------------------------
+    // Toast
+    // -------------------------
+    let toastTimer = null;
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove("show"), 2000);
+    }
+
+    // -------------------------
+    // Modais (genérico + transições)
+    // -------------------------
+    let campoAtual = null;
+
+    function abrirModal(id, titulo) {
+      campoAtual = id;
+      const wrapper = document.getElementById("modalEdicao");
+      const card = document.getElementById("modalEdicaoCard");
+      document.getElementById("modalTitulo").textContent = `Editar ${titulo}`;
+
+      const input = document.getElementById("modalInput");
+      if (id === "foto") {
+        input.type = "url";
+        input.value = document.getElementById("fotoPerfil").src;
+      } else {
+        input.type = "text";
+        input.value = document.getElementById(id).textContent.trim();
+      }
+      wrapper.classList.remove("hidden");
+      wrapper.classList.add("flex");
+      card.classList.add("modal-enter");
+      requestAnimationFrame(() => {
+        card.classList.add("modal-enter-active");
+        card.classList.remove("modal-enter");
+      });
+    }
+
+    function fecharModal() {
+      const wrapper = document.getElementById("modalEdicao");
+      const card = document.getElementById("modalEdicaoCard");
+      card.classList.add("modal-exit");
+      requestAnimationFrame(() => {
+        card.classList.add("modal-exit-active");
+        card.classList.remove("modal-exit");
+      });
+      setTimeout(() => {
+        wrapper.classList.add("hidden");
+        wrapper.classList.remove("flex");
+        card.classList.remove("modal-exit-active");
+      }, 140);
+    }
+
+    function salvarValor() {
+      const novoValor = document.getElementById("modalInput").value.trim();
+      if (novoValor !== "") {
+        if (campoAtual === "foto") {
+          document.getElementById("fotoPerfil").src = novoValor;
+          showToast("Foto de perfil atualizada.");
+        } else {
+          document.getElementById(campoAtual).textContent = novoValor;
+          showToast("Informação atualizada.");
+        }
+      }
+      fecharModal();
+    }
+
+    // -------------------------
+    // Modal Passos (configuração + adicionar)
+    // -------------------------
+    function abrirModalPassos() {
+      document.getElementById("passosMetaInput").value = passosMeta;
+      atualizarUIProgresso();
+
+      const wrapper = document.getElementById("modalPassos");
+      const card = document.getElementById("modalPassosCard");
+      wrapper.classList.remove("hidden");
+      wrapper.classList.add("flex");
+      card.classList.add("modal-enter");
+      requestAnimationFrame(() => {
+        card.classList.add("modal-enter-active");
+        card.classList.remove("modal-enter");
+      });
+    }
+
+    function fecharModalPassos() {
+      const wrapper = document.getElementById("modalPassos");
+      const card = document.getElementById("modalPassosCard");
+      card.classList.add("modal-exit");
+      requestAnimationFrame(() => {
+        card.classList.add("modal-exit-active");
+        card.classList.remove("modal-exit");
+      });
+      setTimeout(() => {
+        wrapper.classList.add("hidden");
+        wrapper.classList.remove("flex");
+        card.classList.remove("modal-exit-active");
+      }, 140);
+    }
+
+    function salvarMeta() {
+      const novo = parseInt(document.getElementById("passosMetaInput").value);
+      if (!isNaN(novo) && novo > 0) {
+        passosMeta = novo;
+        if (passosAtuais > passosMeta) passosAtuais = passosMeta; // evita ultrapassar a meta
+        atualizarUIProgresso();
+        showToast(`Meta atualizada para ${passosMeta} passos.`);
+      } else {
+        showToast("Informe uma meta válida (número > 0).");
+      }
+    }
+
+    function adicionarPassos() {
+      const add = parseInt(document.getElementById("passosAdicionarInput").value);
+      if (isNaN(add) || add <= 0) {
+        showToast("Digite um número válido de passos.");
+        return;
+      }
+      passosAtuais += add;
+      if (passosAtuais > passosMeta) passosAtuais = passosMeta;
+
+      atualizarUIProgresso();
+      const pct = calcularPercentual();
+      showToast(`+${add} passos adicionados! Progresso: ${pct}%`);
+      document.getElementById("passosAdicionarInput").value = "";
+    }
+
+    function adicionarRapido(qtd) {
+      document.getElementById("passosAdicionarInput").value = qtd;
+      adicionarPassos();
+    }
+
+    // -------------------------
+    // Emergência
+    // -------------------------
+    function abrirEmergencia() {
+      const wrapper = document.getElementById("modalEmergencia");
+      const card = document.getElementById("modalEmergenciaCard");
+      wrapper.classList.remove("hidden");
+      wrapper.classList.add("flex");
+      card.classList.add("modal-enter");
+      requestAnimationFrame(() => {
+        card.classList.add("modal-enter-active");
+        card.classList.remove("modal-enter");
+      });
+    }
+    function fecharEmergencia() {
+      const wrapper = document.getElementById("modalEmergencia");
+      const card = document.getElementById("modalEmergenciaCard");
+      card.classList.add("modal-exit");
+      requestAnimationFrame(() => {
+        card.classList.add("modal-exit-active");
+        card.classList.remove("modal-exit");
+      });
+      setTimeout(() => {
+        wrapper.classList.add("hidden");
+        wrapper.classList.remove("flex");
+        card.classList.remove("modal-exit-active");
+      }, 140);
+    }
+
+    // Init
+    document.addEventListener("DOMContentLoaded", () => {
+      initPassosFromCard();
+    });
+  </script>
 </body>
 </html>
